@@ -33,8 +33,8 @@
         <input type="password" name="password" class="form-control" id="password">
     </div>
     <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="forgot_password">
-        <label class="form-check-label" for="forgot_password">Forgot Password</label>
+        <input type="checkbox" class="form-check-input" id="remember_me">
+        <label class="form-check-label" for="remember_me">Remember Me</label>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
