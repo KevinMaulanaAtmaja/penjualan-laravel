@@ -27,3 +27,8 @@ Route::middleware('admin')->group(function () {
 Route::get('/admin/login', [AdminController::class, 'showLogin'])->name('admin.showLogin');
 Route::post('/admin/login_submit', [AdminController::class, 'login'])->name('admin.login');
 Route::post('/admin/logout', action: [AdminController::class, 'logout'])->name('admin.logout');
+
+Route::get('/admin/forget_password', [AdminController::class, 'forget_password'])->name('admin.forget_password');
+Route::post('/admin/password_submit', [AdminController::class, 'password_submit'])->name('admin.password_submit');
+Route::get('/admin/reset_password/{token}/{email}', [AdminController::class, 'reset_password']);
+Route::post('/admin/reset_password_submit', [AdminController::class, 'reset_password_submit'])->name('admin.reset_password_submit');

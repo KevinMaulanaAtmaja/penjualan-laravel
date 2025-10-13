@@ -36,6 +36,9 @@
         <input type="checkbox" class="form-check-input" id="remember_me">
         <label class="form-check-label" for="remember_me">Remember Me</label>
     </div>
+    <div class="mb-3 form-check">
+        <a href="{{ route('admin.forget_password') }}" for="forget_password">Forget Password</a>
+    </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 </body>
