@@ -18,9 +18,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+Route::middleware('admin')->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+});
+
 Route::get('/admin/login', [AdminController::class, 'showLogin'])->name('admin.showLogin');
 Route::post('/admin/login_submit', [AdminController::class, 'login'])->name('admin.login');
 Route::post('/admin/logout', action: [AdminController::class, 'logout'])->name('admin.logout');
