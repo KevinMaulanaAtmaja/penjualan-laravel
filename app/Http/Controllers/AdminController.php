@@ -36,4 +36,10 @@ class AdminController extends Controller
             return redirect()->route('admin.showLogin')->with('error', 'Invalid email or password');
         }
     }
+
+    public function logout()
+    {
+        Auth::guard('admin')->logout();
+        return redirect()->route('admin.showLogin')->with('success', 'Logout successfully');
+    }
 }
