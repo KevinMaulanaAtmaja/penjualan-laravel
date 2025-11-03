@@ -1,27 +1,130 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Client\RestaurantController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CouponController;
+use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\ManageController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+Route::get('/', [UserController::class, 'Index'])->name('index');
+
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    // return view('dashboard');
+    return view('frontend.dashboard.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/store', [UserController::class, 'ProfileStore'])->name('profile.store');
+    Route::get('/user/logout', [UserController::class, 'UserLogout'])->name('user.logout');
+    Route::get('/change/password', [UserController::class, 'ChangePassword'])->name('change.password');
+    Route::post('/user/password/update', [UserController::class, 'UserPasswordUpdate'])->name('user.password.update');
 });
 
 require __DIR__ . '/auth.php';
 
 Route::middleware('admin')->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
+    Route::post('/admin/profile/store', [AdminController::class, 'profileStore'])->name('admin.profile.store');
+    Route::get('/admin/change/password', [AdminController::class, 'changePassword'])->name('admin.change.password');
+    Route::post('/admin/password/update', [AdminController::class, 'passwordUpdate'])->name('admin.password.update');
+});
+
+/// All Admin Category 
+Route::middleware('admin')->group(function () {
+    Route::controller(CategoryController::class)->group(function () {
+        Route::get('/all/city', 'AllCity')->name('all.city');
+        Route::post('/store/city', 'StoreCity')->name('city.store');
+        Route::get('/edit/city/{id}', 'EditCity');
+        Route::post('/update/city', 'UpdateCity')->name('city.update');
+        Route::get('/delete/city/{id}', 'DeleteCity')->name('delete.city');
+        Route::get('/all/category', 'AllCategory')->name('all.category');
+        Route::get('/add/category', 'AddCategory')->name('add.category');
+        Route::post('/store/category', 'StoreCategory')->name('category.store');
+        Route::get('/edit/category/{id}', 'EditCategory')->name('edit.category');
+        Route::post('/update/category', 'UpdateCategory')->name('category.update');
+        Route::get('/delete/category/{id}', 'DeleteCategory')->name('delete.category');
+    });
+
+    Route::controller(ManageController::class)->group(function () {
+        Route::get('/admin/all/product', 'AdminAllProduct')->name('admin.all.product');
+        Route::get('/admin/add/product', 'AdminAddProduct')->name('admin.add.product');
+        Route::post('/admin/store/product', 'AdminStoreProduct')->name('admin.product.store');
+        Route::get('/admin/edit/product/{id}', 'AdminEditProduct')->name('admin.edit.product');
+        Route::post('/admin/update/product', 'AdminUpdateProduct')->name('admin.product.update');
+        Route::get('/admin/delete/product/{id}', 'AdminDeleteProduct')->name('admin.delete.product');
+    });
+
+    Route::controller(ManageController::class)->group(function () {
+        Route::get('/pending/restaurant', 'PendingRestaurant')->name('pending.restaurant');
+        Route::get('/clientchangeStatus', 'ClientChangeStatus');
+        Route::get('/approve/restaurant', 'ApproveRestaurant')->name('approve.restaurant');
+    });
+
+    Route::controller(ManageController::class)->group(function () {
+        Route::get('/all/banner', 'AllBanner')->name('all.banner');
+        Route::post('/banner/store', 'BannerStore')->name('banner.store');
+        Route::get('/edit/banner/{id}', 'EditBanner');
+        Route::post('/banner/update', 'BannerUpdate')->name('banner.update');
+        Route::get('/delete/banner/{id}', 'DeleteBanner')->name('delete.banner');
+    });
+});
+
+
+/// That will be for all user 
+Route::get('/changeStatus', [RestaurantController::class, 'ChangeStatus']);
+
+Route::controller(HomeController::class)->group(function () {
+    Route::get('/restaurant/details/{id}', 'RestaurantDetails')->name('res.details');
+});
+
+// All Client
+Route::middleware(['client', 'status'])->group(function () {
+
+    Route::controller(RestaurantController::class)->group(function () {
+        Route::get('/all/menu', 'AllMenu')->name('all.menu');
+        Route::get('/add/menu', 'AddMenu')->name('add.menu');
+        Route::post('/store/menu', 'StoreMenu')->name('menu.store');
+        Route::get('/edit/menu/{id}', 'EditMenu')->name('edit.menu');
+        Route::post('/update/menu', 'UpdateMenu')->name('menu.update');
+        Route::get('/delete/menu/{id}', 'DeleteMenu')->name('delete.menu');
+    });
+
+    Route::controller(RestaurantController::class)->group(function () {
+        Route::get('/all/product', 'AllProduct')->name('all.product');
+        Route::get('/add/product', 'AddProduct')->name('add.product');
+        Route::post('/store/product', 'StoreProduct')->name('product.store');
+        Route::get('/edit/product/{id}', 'EditProduct')->name('edit.product');
+        Route::post('/update/product', 'UpdateProduct')->name('product.update');
+        Route::get('/delete/product/{id}', 'DeleteProduct')->name('delete.product');
+        Route::get('/changeStatus', 'ChangeStatus');
+    });
+
+    Route::controller(RestaurantController::class)->group(function () {
+        Route::get('/all/gallery', 'AllGallery')->name('all.gallery');
+        Route::get('/add/gallery', 'AddGallery')->name('add.gallery');
+        Route::post('/store/gallery', 'StoreGallery')->name('gallery.store');
+        Route::get('/edit/gallery/{id}', 'EditGallery')->name('edit.gallery');
+        Route::post('/update/gallery', 'UpdateGallery')->name('gallery.update');
+        Route::get('/delete/gallery/{id}', 'DeleteGallery')->name('delete.gallery');
+    });
+
+    Route::controller(CouponController::class)->group(function () {
+        Route::get('/all/coupon', 'AllCoupon')->name('all.coupon');
+        Route::get('/add/coupon', 'AddCoupon')->name('add.coupon');
+        Route::post('/store/coupon', 'StoreCoupon')->name('coupon.store');
+        Route::get('/edit/coupon/{id}', 'EditCoupon')->name('edit.coupon');
+        Route::post('/update/coupon', 'UpdateCoupon')->name('coupon.update');
+        Route::get('/delete/coupon/{id}', 'DeleteCoupon')->name('delete.coupon');
+    });
 });
 
 Route::get('/admin/login', [AdminController::class, 'showLogin'])->name('admin.showLogin');
@@ -32,3 +135,19 @@ Route::get('/admin/forget_password', [AdminController::class, 'forget_password']
 Route::post('/admin/password_submit', [AdminController::class, 'password_submit'])->name('admin.password_submit');
 Route::get('/admin/reset_password/{token}/{email}', [AdminController::class, 'reset_password']);
 Route::post('/admin/reset_password_submit', [AdminController::class, 'reset_password_submit'])->name('admin.reset_password_submit');
+
+
+/// All Route For Client
+Route::get('/client/login', [ClientController::class, 'ClientLogin'])->name('client.login');
+Route::get('/client/register', [ClientController::class, 'ClientRegister'])->name('client.register');
+Route::post('/client/register/submit', [ClientController::class, 'ClientRegisterSubmit'])->name('client.register.submit');
+Route::post('/client/login/submit', [ClientController::class, 'ClientLoginSubmit'])->name('client.login.submit');
+Route::post('/client/logout', [ClientController::class, 'ClientLogout'])->name('client.logout');
+
+Route::middleware('client')->group(function () {
+    Route::get('/client/dashboard', [ClientController::class, 'ClientDashboard'])->name('client.dashboard');
+    Route::get('/client/profile', [ClientController::class, 'ClientProfile'])->name('client.profile');
+    Route::post('/client/profile/store', [ClientController::class, 'ClientProfileStore'])->name('client.profile.store');
+    Route::get('/client/change/password', [ClientController::class, 'ClientChangePassword'])->name('client.change.password');
+    Route::post('/client/password/update', [ClientController::class, 'ClientPasswordUpdate'])->name('client.password.update');
+});

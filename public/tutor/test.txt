@@ -1,0 +1,12 @@
+@if (Session::has('success'))
+        <li>{{ Session::get('success') }}</li>
+    @endif
+    @if (Session::has('error'))
+        <li>{{ Session::get('error') }}</li>
+    @endif
+
+
+<form action="{{ route('admin.logout') }}" method="POST">
+        @csrf
+        <button>Logout</button>
+</form>
