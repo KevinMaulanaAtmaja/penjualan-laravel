@@ -4,3 +4,7 @@ admin@adminadmin123
 user
 user@gmail.com
 12345678
+
+client
+client@gmail.com
+client123
