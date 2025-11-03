@@ -93,8 +93,9 @@ class CartController extends Controller
                     Session::put('coupon', [
                         'coupon_name' => $coupon->coupon_name,
                         'discount' => $coupon->discount,
-                        'discount_amount' => $totalAmount - ($totalAmount * $coupon->discount / 100),
+                        'discount_amount' => ($totalAmount * $coupon->discount) / 100,
                     ]);
+
                     $couponData = Session()->get('coupon');
 
                     return response()->json(array(
@@ -119,33 +120,63 @@ class CartController extends Controller
         return response()->json(['success' => 'Coupon Remove Successfully']);
     }
 
+    // public function ShopCheckout()
+    // {
+    //     if (Auth::check()) {
+    //         $cart = session()->get('cart', []);
+    //         $totalAmount = 0;
+    //         foreach ($cart as $car) {
+    //             $totalAmount += $car['price'];
+    //         }
+
+    //         if ($totalAmount > 0) {
+    //             return view('frontend.checkout.view_checkout', compact('cart'));
+    //         } else {
+
+    //             $notification = array(
+    //                 'message' => 'Shopping at list one item',
+    //                 'alert-type' => 'error'
+    //             );
+    //             return redirect()->to('/')->with($notification);
+    //         }
+    //     } else {
+
+    //         $notification = array(
+    //             'message' => 'Please Login First',
+    //             'alert-type' => 'success'
+    //         );
+
+    //         return redirect()->route('login')->with($notification);
+    //     }
+    // }
+
+
     public function ShopCheckout()
     {
-        if (Auth::check()) {
-            $cart = session()->get('cart', []);
-            $totalAmount = 0;
-            foreach ($cart as $car) {
-                $totalAmount += $car['price'];
-            }
-
-            if ($totalAmount > 0) {
-                return view('frontend.checkout.view_checkout', compact('cart'));
-            } else {
-
-                $notification = array(
-                    'message' => 'Shopping at list one item',
-                    'alert-type' => 'error'
-                );
-                return redirect()->to('/')->with($notification);
-            }
-        } else {
-
-            $notification = array(
+        if (!Auth::check()) {
+            return redirect()->route('login')->with([
                 'message' => 'Please Login First',
                 'alert-type' => 'success'
-            );
-
-            return redirect()->route('login')->with($notification);
+            ]);
         }
+
+        $cart = session()->get('cart', []);
+        $totalAmount = 0;
+
+        foreach ($cart as $car) {
+            $totalAmount += $car['price'] * $car['quantity'];
+        }
+
+        if ($totalAmount <= 0) {
+            return redirect('/')->with([
+                'message' => 'Shopping at least one item',
+                'alert-type' => 'error'
+            ]);
+        }
+
+        return view('frontend.checkout.view_checkout', [
+            'cart' => $cart,
+            'total' => $totalAmount,
+        ]);
     }
 }

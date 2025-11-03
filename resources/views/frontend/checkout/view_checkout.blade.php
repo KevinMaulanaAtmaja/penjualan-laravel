@@ -86,9 +86,16 @@
                                             <h6 class="mt-0 mb-3">Cash</h6>
                                             <p>Please keep exact change handy to help us serve you better</p>
                                             <hr>
-                                            <form>
-                                                <a href="thanks.html" class="btn btn-success btn-block btn-lg">PAY $1329
-                                                    <i class="icofont-long-arrow-right"></i></a>
+                                            <form action="{{ route('cash_order') }}" method="post">
+                                                @csrf
+
+                                                <input type="hidden" name="name" value="{{ Auth::user()->name }}">
+                                                <input type="hidden" name="email" value="{{ Auth::user()->email }}">
+                                                <input type="hidden" name="phone" value="{{ Auth::user()->phone }}">
+                                                <input type="hidden" name="address" value="{{ Auth::user()->address }}">
+
+                                                <button type="submit" class="btn btn-success btn-block btn-lg">PAY
+                                                    <i class="icofont-long-arrow-right"></i></button>
                                             </form>
                                         </div>
 
@@ -113,7 +120,8 @@
                                                                 placeholder="Card number">
                                                             <div class="input-group-append">
                                                                 <button class="btn btn-outline-secondary" type="button"
-                                                                    id="button-addon2"><i class="icofont-card"></i></button>
+                                                                    id="button-addon2"><i
+                                                                        class="icofont-card"></i></button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -217,50 +225,47 @@
 
 
                         @if (Session::has('coupon'))
-                            <div class="clearfix p-2 mb-2 bg-white rounded">
-                                <p class="mb-1">Item Total <span
-                                        class="float-right text-dark">{{ count((array) session('cart')) }}</span></p>
+                            @php
+                                $discount = Session()->get('coupon')['discount_amount'];
+                                $payable = $total - $discount;
+                            @endphp
 
-                                <p class="mb-1">Coupon Name <span
-                                        class="float-right text-dark">{{ session()->get('coupon')['coupon_name'] }} (
-                                        {{ session()->get('coupon')['discount'] }} %) </span>
-                                    <a type="submit" onclick="couponRemove()"><i class="float-right icofont-ui-delete"
-                                            style="color: red;"></i></a>
+                            <div class="clearfix p-2 mb-2 bg-white rounded">
+
+                                <p class="mb-1">
+                                    Subtotal
+                                    <span class="float-right text-dark">${{ $total }}</span>
                                 </p>
 
+                                <p class="mb-1">
+                                    Coupon
+                                    <span class="float-right text-dark">
+                                        {{ session()->get('coupon')['coupon_name'] }}
+                                        ({{ session()->get('coupon')['discount'] }}%)
+                                    </span>
+                                    <a onclick="couponRemove()">
+                                        <i class="float-right icofont-ui-delete text-danger"></i>
+                                    </a>
+                                </p>
 
-                                <p class="mb-1 text-success">Total Discount
+                                <p class="mb-1 text-success">
+                                    Discount
                                     <span class="float-right text-success">
-
-                                        @if (Session::has('coupon'))
-                                            ${{ $total - Session()->get('coupon')['discount_amount'] }}
-                                        @else
-                                            ${{ $total }}
-                                        @endif
-
+                                        -${{ $discount }}
                                     </span>
                                 </p>
+
                                 <hr />
-                                <h6 class="mb-0 font-weight-bold">TO PAY <span class="float-right">
-                                        @if (Session::has('coupon'))
-                                            ${{ Session()->get('coupon')['discount_amount'] }}
-                                        @else
-                                            ${{ $total }}
-                                        @endif
-                                    </span></h6>
-                            </div>
-                        @else
-                            <div class="clearfix p-2 mb-2 bg-white rounded">
-                                <div class="mb-2 input-group input-group-sm">
-                                    <input type="text" class="form-control" placeholder="Enter promo code"
-                                        id="coupon_name">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="submit" id="button-addon2"
-                                            onclick="ApplyCoupon()"><i class="icofont-sale-discount"></i> APPLY</button>
-                                    </div>
-                                </div>
+
+                                <h6 class="mb-0 font-weight-bold">
+                                    TO PAY
+                                    <span class="float-right">
+                                        ${{ $payable }}
+                                    </span>
+                                </h6>
                             </div>
                         @endif
+
                         <a href="thanks.html" class="btn btn-success btn-block btn-lg">PAY
                             @if (Session::has('coupon'))
                                 ${{ Session()->get('coupon')['discount_amount'] }}

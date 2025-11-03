@@ -95,25 +95,25 @@ $(function(){
 
 
   $(function(){
-    $(document).on('click','#deliverdOrder',function(e){
+    $(document).on('click','#deliveredOrder',function(e){
         e.preventDefault();
         var link = $(this).attr("href");
 
   
                   Swal.fire({
                     title: 'Are you sure?',
-                    text: "deliverd This Data?",
+                    text: "delivered This Data?",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, deliverd it!'
+                    confirmButtonText: 'Yes, delivered it!'
                   }).then((result) => {
                     if (result.isConfirmed) {
                       window.location.href = link
                       Swal.fire(
-                        'deliverd!',
-                        'Your file has been deliverd.',
+                        'delivered!',
+                        'Your file has been delivered.',
                         'success'
                       )
                     }

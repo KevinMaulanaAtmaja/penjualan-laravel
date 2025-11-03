@@ -535,6 +535,9 @@
 
                             @php $total = 0 @endphp
                             @if (session('cart'))
+                                <h5 class="ml-3">
+                                    Subtotal :
+                                </h5>
                                 @foreach (session('cart') as $id => $details)
                                     @php
                                         $total += $details['price'] * $details['quantity'];
@@ -570,33 +573,40 @@
                         </div>
                         @if (Session::has('coupon'))
                             <div class="clearfix p-2 mb-2 bg-white rounded">
-                                <p class="mb-1">Item Total <span
-                                        class="float-right text-dark">{{ count((array) session('cart')) }}</span></p>
 
-                                <p class="mb-1">Coupon Name <span
-                                        class="float-right text-dark">{{ session()->get('coupon')['coupon_name'] }} (
-                                        {{ session()->get('coupon')['discount'] }} %) </span>
-                                    <a type="submit" onclick="couponRemove()"><i class="float-right icofont-ui-delete"
-                                            style="color: red;"></i></a>
-                                </p>
-
-                                <p class="mb-1 text-success">Total Discount
-                                    <span class="float-right text-success">
-                                        @if (Session::has('coupon'))
-                                            ${{ $total - Session()->get('coupon')['discount_amount'] }}
-                                        @else
-                                            ${{ $total }}
-                                        @endif
+                                <p class="mb-1">
+                                    Item Total
+                                    <span class="float-right text-dark">
+                                        {{ count((array) session('cart')) }}
                                     </span>
                                 </p>
+
+                                <p class="mb-1">
+                                    Coupon Name
+                                    <span class="float-right text-dark">
+                                        {{ session('coupon.coupon_name') }} ({{ session('coupon.discount') }}%)
+                                    </span>
+                                    <a type="submit" onclick="couponRemove()">
+                                        <i class="float-right icofont-ui-delete" style="color:red;"></i>
+                                    </a>
+                                </p>
+
+                                <p class="mb-1 text-success">
+                                    Discount
+                                    <span class="float-right text-success">
+                                        ${{ session('coupon.discount_amount') }}
+                                    </span>
+                                </p>
+
                                 <hr />
-                                <h6 class="mb-0 font-weight-bold">TO PAY <span class="float-right">
-                                        @if (Session::has('coupon'))
-                                            ${{ Session()->get('coupon')['discount_amount'] }}
-                                        @else
-                                            ${{ $total }}
-                                        @endif
-                                    </span></h6>
+
+                                <h6 class="mb-0 font-weight-bold">
+                                    TO PAY
+                                    <span class="float-right">
+                                        ${{ $total - session('coupon.discount_amount') }}
+                                    </span>
+                                </h6>
+
                             </div>
                         @else
                             <div class="clearfix p-2 mb-2 bg-white rounded">
@@ -604,17 +614,19 @@
                                     <input type="text" class="form-control" placeholder="Enter promo code"
                                         id="coupon_name">
                                     <div class="input-group-append">
-                                        <button class="btn btn-primary" type="submit" id="button-addon2"
-                                            onclick="ApplyCoupon()"><i class="icofont-sale-discount"></i> APPLY</button>
+                                        <button class="btn btn-primary" type="submit" onclick="ApplyCoupon()">
+                                            <i class="icofont-sale-discount"></i> APPLY
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         @endif
+
                         <div class="clearfix p-2 mb-2 bg-white rounded">
                             <img class="float-left img-fluid" src="{{ asset('frontend/img/wallet-icon.png') }}">
                             <h6 class="mb-2 text-right font-weight-bold">Subtotal : <span class="text-danger">
                                     @if (Session::has('coupon'))
-                                        ${{ Session()->get('coupon')['discount_amount'] }}
+                                        ${{ $total - Session()->get('coupon')['discount_amount'] }}
                                     @else
                                         ${{ $total }}
                                     @endif
