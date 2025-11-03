@@ -4,11 +4,11 @@
 @endphp
 
 <div class="col-md-3">
-    <div class="osahan-account-page-left shadow-sm rounded bg-white h-100">
-        <div class="border-bottom p-4">
-            <div class="osahan-user text-center">
+    <div class="bg-white rounded shadow-sm osahan-account-page-left h-100">
+        <div class="p-4 border-bottom">
+            <div class="text-center osahan-user">
                 <div class="osahan-user-media">
-                    <img class="mb-3 rounded-pill shadow-sm mt-1"
+                    <img class="mt-1 mb-3 shadow-sm rounded-pill"
                         src="{{ !empty($profileData->photo) ? url('upload/user_images/' . $profileData->photo) : url('upload/no_image.jpg') }}"
                         alt="gurdeep singh osahan">
                     <div class="osahan-user-media-body">
@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-        <ul class="nav nav-tabs flex-column border-0 pt-4 pl-4 pb-4" id="myTab" role="tablist">
+        <ul class="pt-4 pb-4 pl-4 border-0 nav nav-tabs flex-column" id="myTab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link {{ Route::currentRouteName() === 'dashboard' ? 'active' : '' }}"
                     href="{{ route('dashboard') }}" role="tab" aria-controls="orders" aria-selected="true"><i
@@ -31,14 +31,13 @@
                     href="{{ route('change.password') }}" role="tab" aria-controls="orders" aria-selected="true"><i
                         class="icofont-food-cart"></i> Change Password </a>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link" id="offers-tab" data-toggle="tab" href="#offers" role="tab"
-                    aria-controls="offers" aria-selected="false"><i class="icofont-sale-discount"></i> Offers</a>
+                <a class="nav-link {{ Route::currentRouteName() === 'all.wishlist' ? 'active' : '' }}"
+                    href="{{ route('all.wishlist') }}" role="tab" aria-controls="orders" aria-selected="true"><i
+                        class="icofont-food-cart"></i> Favourites </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" id="favourites-tab" data-toggle="tab" href="#favourites" role="tab"
-                    aria-controls="favourites" aria-selected="false"><i class="icofont-heart"></i> Favourites</a>
-            </li>
+
             <li class="nav-item">
                 <a class="nav-link" id="payments-tab" data-toggle="tab" href="#payments" role="tab"
                     aria-controls="payments" aria-selected="false"><i class="icofont-credit-card"></i> Payments</a>

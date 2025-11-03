@@ -1,4 +1,5 @@
-@include('frontend.dashboard.header')
+@extends('frontend.dashboard.index')
+@section('content')
 
 @php
     $products = App\Models\Product::where('client_id', $client->id)->limit(3)->get();
@@ -632,6 +633,4 @@
     </div>
 </section>
 
-
-
-@include('frontend.dashboard.footer')
+@endsection

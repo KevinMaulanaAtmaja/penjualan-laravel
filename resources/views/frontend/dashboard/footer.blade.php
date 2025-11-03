@@ -1,4 +1,4 @@
-<section class="section pt-5 pb-5 text-center bg-white">
+<section class="pt-5 pb-5 text-center bg-white section">
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
@@ -7,12 +7,12 @@
         </div>
     </div>
 </section>
-<section class="footer pt-5 pb-5">
+<section class="pt-5 pb-5 footer">
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-12 col-sm-12">
                 <h6 class="mb-3">Subscribe to our Newsletter</h6>
-                <form class="newsletter-form mb-1">
+                <form class="mb-1 newsletter-form">
                     <div class="input-group">
                         <input type="text" placeholder="Please enter your email" class="form-control">
                         <div class="input-group-append">
@@ -69,7 +69,7 @@
         </div>
     </div>
 </section>
-<section class="footer-bottom-search pt-5 pb-5 bg-white">
+<section class="pt-5 pb-5 bg-white footer-bottom-search">
     <div class="container">
         <div class="row">
             <div class="col-xl-12">
@@ -126,15 +126,4 @@
         </small>
     </div>
 </footer>
-<!-- jQuery -->
-<script src="{{ asset('frontend/vendor/jquery/jquery-3.3.1.slim.min.js') }}"></script>
-<!-- Bootstrap core JavaScript-->
-<script src="{{ asset('frontend/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<!-- Select2 JavaScript-->
-<script src="{{ asset('frontend/vendor/owl-carousel/owl.carousel.js') }}"></script>
-<script src="{{ asset('frontend/vendor/select2/js/select2.min.js') }}"></script>
-<!-- Custom scripts for all pages-->
-<script src="{{ asset('frontend/js/custom.js') }}"></script>
-</body>
 
-</html>
