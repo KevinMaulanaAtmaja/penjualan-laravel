@@ -1,0 +1,6 @@
+admin
+admin@adminadmin123
+
+user
+user@gmail.com
+12345678

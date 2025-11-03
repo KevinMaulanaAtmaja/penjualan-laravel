@@ -50,7 +50,7 @@ class RestaurantController extends Controller
             }
 
             $img = $manager->read($image);
-            $img->resize(300, 300)->save($uploadPath . $name_gen);
+            $img->resize(800, 800)->save($uploadPath . $name_gen);
 
             $save_url = 'upload/product/' . $name_gen;
 
@@ -101,7 +101,7 @@ class RestaurantController extends Controller
             $manager = new ImageManager(new Driver());
             $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
             $img = $manager->read($image);
-            $img->resize(300, 300)->save(public_path('upload/product/' . $name_gen));
+            $img->resize(800, 800)->save(public_path('upload/product/' . $name_gen));
             $save_url = 'upload/product/' . $name_gen;
 
             Product::find($pro_id)->update([
