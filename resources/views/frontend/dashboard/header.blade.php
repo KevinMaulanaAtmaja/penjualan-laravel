@@ -53,39 +53,71 @@
                         </a>
                     </li>
                 @endauth
+                @php
+                    $total = 0;
+                    $cart = session()->get('cart', []);
+                    $groupedCart = [];
+
+                    foreach ($cart as $item) {
+                        $groupedCart[$item['client_id']][] = $item;
+                    }
+
+                    $clients = App\Models\Client::whereIn('id', array_keys($groupedCart))->get()->keyBy('id');
+
+                @endphp
+
                 <li class="nav-item dropdown dropdown-cart">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-shopping-basket"></i> Cart
-                        <span class="badge badge-success">5</span>
+                        <span class="badge badge-success">{{ count((array) session('cart')) }}</span>
                     </a>
                     <div class="p-0 border-0 shadow-sm dropdown-menu dropdown-cart-top dropdown-menu-right">
-                        <div class="p-4 dropdown-cart-top-header">
-                            <img class="mr-3 img-fluid" alt="osahan" src="{{ asset('frontend/img/cart.jpg') }}">
-                            <h6 class="mb-0">Gus's World Famous Chicken</h6>
-                            <p class="mb-0 text-secondary">310 S Front St, Memphis, USA</p>
-                            <small><a class="text-primary font-weight-bold" href="#">View Full
-                                    Menu</a></small>
-                        </div>
+
+                        @foreach ($groupedCart as $clientId => $items)
+                            @if (isset($clients[$clientId]))
+                                @php
+                                    $client = $clients[$clientId];
+                                @endphp
+                                <div class="p-4 dropdown-cart-top-header">
+                                    <img class="mr-3 img-fluid" alt="osahan"
+                                        src="{{ asset('upload/client_images/' . $client->photo) }}">
+                                    <h6 class="mb-0">{{ $client->name }}</h6>
+                                    <p class="mb-0 text-secondary">{{ $client->address }}</p>
+                                </div>
+                            @endif
+                        @endforeach
+
+
                         <div class="p-4 dropdown-cart-top-body border-top">
-                            <p class="mb-2"><i class="icofont-ui-press text-danger food-item"></i> Chicken Tikka
-                                Sub 12" (30 cm) x 1 <span class="float-right text-secondary">$314</span></p>
-                            <p class="mb-2"><i class="icofont-ui-press text-success food-item"></i> Corn & Peas
-                                Salad x 1 <span class="float-right text-secondary">$209</span></p>
-                            <p class="mb-2"><i class="icofont-ui-press text-success food-item"></i> Veg Seekh
-                                Sub 6" (15 cm) x 1 <span class="float-right text-secondary">$133</span></p>
-                            <p class="mb-2"><i class="icofont-ui-press text-danger food-item"></i> Chicken Tikka
-                                Sub 12" (30 cm) x 1 <span class="float-right text-secondary">$314</span></p>
-                            <p class="mb-2"><i class="icofont-ui-press text-danger food-item"></i> Corn & Peas
-                                Salad x 1 <span class="float-right text-secondary">$209</span></p>
+                            @php $total = 0 @endphp
+                            @if (session('cart'))
+                                @foreach (session('cart') as $id => $details)
+                                    @php
+                                        $total += $details['price'] * $details['quantity'];
+                                    @endphp
+
+                                    <p class="mb-2"><i
+                                            class="icofont-ui-press text-danger food-item"></i>{{ $details['name'] }} x
+                                        {{ $details['quantity'] }} <span
+                                            class="float-right text-secondary">${{ $details['price'] * $details['quantity'] }}</span>
+                                    </p>
+                                @endforeach
+                            @endif
+
                         </div>
                         <div class="p-4 dropdown-cart-top-footer border-top">
                             <p class="mb-0 font-weight-bold text-secondary">Sub Total <span
-                                    class="float-right text-dark">$499</span></p>
-                            <small class="text-info">Extra charges may apply</small>
+                                    class="float-right text-dark">
+                                    @if (Session::has('coupon'))
+                                        ${{ Session()->get('coupon')['discount_amount'] }}
+                                    @else
+                                        ${{ $total }}
+                                    @endif
+                                </span></p>
                         </div>
                         <div class="p-2 dropdown-cart-top-footer border-top">
-                            <a class="btn btn-success btn-block btn-lg" href="checkout.html"> Checkout</a>
+                            <a class="btn btn-success btn-block btn-lg" href="{{ route('checkout') }}"> Checkout</a>
                         </div>
                     </div>
                 </li>

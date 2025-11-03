@@ -23,7 +23,8 @@
                 <div class="row d-flex align-items-end">
                     <div class="col-md-8">
                         <div class="restaurant-detailed-header-left">
-                            <p class="mb-2 text-info"><i class="mr-2 font-bold font-size-24 icofont-phone-circle text-info"></i>
+                            <p class="mb-2 text-info"><i
+                                    class="mr-2 font-bold font-size-24 icofont-phone-circle text-info"></i>
                                 {{ $client->phone }}</p>
                             <h2 class="text-white">{{ $client->name }}</h2>
                             <p class="mb-1 text-white"><i class="icofont-location-pin"></i> {{ $client->address }}
@@ -620,7 +621,7 @@
                                 </span></h6>
                             <p class="mb-1 text-right seven-color">Extra charges may apply</p>
                         </div>
-                        <a href="checkout.html" class="btn btn-success btn-block btn-lg">Checkout <i
+                        <a href="{{ route('checkout') }}" class="btn btn-success btn-block btn-lg">Checkout <i
                                 class="icofont-long-arrow-right"></i></a>
                     </div>
 
