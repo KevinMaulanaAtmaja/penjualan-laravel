@@ -14,7 +14,7 @@ class Admin extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles;
 
-    protected $guard = 'admin';
+    // protected $guard = 'admin';
     protected $guard_name = 'admin';
     // protected $table = 'admins';
 

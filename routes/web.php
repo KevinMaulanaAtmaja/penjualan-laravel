@@ -68,6 +68,8 @@ Route::controller(OrderController::class)->group(function () {
     Route::post('/cash_order', 'CashOrder')->name('cash_order');
     Route::view('/checkout/thanks', 'frontend.checkout.thanks')->name('checkout.thanks');
     Route::post('/stripe_order', 'StripeOrder')->name('stripe_order');
+
+    Route::post('/mark-notification-as-read/{notification}', 'MarkAsRead');
 });
 
 
@@ -89,7 +91,7 @@ Route::middleware('admin')->group(function () {
         Route::get('/edit/city/{id}', 'EditCity');
         Route::post('/update/city', 'UpdateCity')->name('city.update');
         Route::get('/delete/city/{id}', 'DeleteCity')->name('delete.city');
-        Route::get('/all/category', 'AllCategory')->name('all.category');
+        Route::get('/all/category', 'AllCategory')->name('all.category')->middleware(['permission:category.all']);
         Route::get('/add/category', 'AddCategory')->name('add.category');
         Route::post('/store/category', 'StoreCategory')->name('category.store');
         Route::get('/edit/category/{id}', 'EditCategory')->name('edit.category');

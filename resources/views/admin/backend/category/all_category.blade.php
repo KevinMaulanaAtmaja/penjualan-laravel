@@ -10,7 +10,7 @@
                         <h4 class="mb-sm-0 font-size-18">All Category</h4>
 
                         <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
+                            <ol class="m-0 breadcrumb">
                                 <a href="{{ route('add.category') }}" class="btn btn-primary waves-effect waves-light">Add
                                     Category</a>
                             </ol>
@@ -26,7 +26,7 @@
 
                         <div class="card-body">
 
-                            <table id="datatable" class="table table-bordered dt-responsive  nowrap w-100">
+                            <table id="datatable" class="table table-bordered dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
                                         <th>Sl</th>
@@ -44,11 +44,15 @@
                                             <td>{{ $item->category_name }}</td>
                                             <td><img src="{{ asset($item->image) }}" alt=""
                                                     style="width: 70px; height:40px;"></td>
-                                            <td><a href="{{ route('edit.category', $item->id) }}"
+                                            <td>
+                                                <a href="{{ route('edit.category', $item->id) }}"
                                                     class="btn btn-info waves-effect waves-light">Edit</a>
-                                                <a href="{{ route('delete.category', $item->id) }}"
-                                                    class="btn btn-danger waves-effect waves-light"
-                                                    id="delete">Delete</a>
+
+                                                @if (Auth::guard('admin')->user()->can('category.delete'))
+                                                    <a href="{{ route('delete.category', $item->id) }}"
+                                                        class="btn btn-danger waves-effect waves-light"
+                                                        id="delete">Delete</a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
