@@ -11,6 +11,7 @@ use App\Http\Controllers\Frontend\OrderController;
 use App\Http\Controllers\ManageController;
 use App\Http\Controllers\Admin\ManageOrderController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Frontend\ReviewController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +41,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/user/order/details/{id}', 'UserOrderDetails')->name('user.order.details');
         Route::get('/user/invoice/download/{id}', 'UserInvoiceDownload')->name('user.invoice.download');
     });
+
+    Route::controller(ReviewController::class)->group(function () {
+        Route::post('/store/review', 'StoreReview')->name('store.review');
+    });
 });
 
 Route::controller(CartController::class)->group(function () {
@@ -56,6 +61,7 @@ Route::controller(OrderController::class)->group(function () {
     Route::post('/cash_order', 'CashOrder')->name('cash_order');
     Route::view('/checkout/thanks', 'frontend.checkout.thanks')->name('checkout.thanks');
 });
+
 
 require __DIR__ . '/auth.php';
 
@@ -126,6 +132,13 @@ Route::middleware('admin')->group(function () {
         Route::post('/admin/search/bymonth', 'AdminSearchByMonth')->name('admin.search.bymonth');
         Route::post('/admin/search/byyear', 'AdminSearchByYear')->name('admin.search.byyear');
     });
+
+    Route::controller(ReviewController::class)->group(function () {
+        Route::get('/admin/pending/review', 'AdminPendingReview')->name('admin.pending.review');
+        Route::get('/admin/approve/review', 'AdminApproveReview')->name('admin.approve.review');
+        Route::get('/admin/approve/review', 'AdminApproveReview')->name('admin.approve.review');
+        Route::get('/reviewchangeStatus', 'ReviewChangeStatus');
+    });
 });
 
 
@@ -187,6 +200,11 @@ Route::middleware(['client', 'status'])->group(function () {
         Route::post('/client/search/bydate', 'ClientSearchByDate')->name('client.search.bydate');
         Route::post('/client/search/bymonth', 'ClientSearchByMonth')->name('client.search.bymonth');
         Route::post('/client/search/byyear', 'ClientSearchByYear')->name('client.search.byyear');
+    });
+    
+    Route::controller(ReviewController::class)->group(function(){
+        Route::get('/client/all/reviews', 'ClientAllReviews')->name('client.all.reviews'); 
+        
     });
 });
 

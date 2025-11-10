@@ -23,14 +23,26 @@
                         $menuNamesString = implode(' . ', $menuNames);
                         $coupons = App\Models\Coupon::where('client_id', $client->id)->where('status', '1')->first();
                     @endphp
+                    @php
+                        $reviewcount = App\Models\Review::where('client_id', $client->id)
+                            ->where('status', 1)
+                            ->latest()
+                            ->get();
+                        $avarage = App\Models\Review::where('client_id', $client->id)
+                            ->where('status', 1)
+                            ->avg('rating');
+                    @endphp
                     <div class="col-md-3">
                         <div class="pb-3 item">
                             <div class="overflow-hidden bg-white rounded shadow-sm list-card h-100 position-relative">
                                 <div class="list-card-image">
                                     <div class="star position-absolute"><span class="badge badge-success"><i
-                                                class="icofont-star"></i> 3.1 (300+)</span></div>
-                                    <div class="favourite-heart text-danger position-absolute"><a aria-label="Add to Wishlist" onclick="addWishList({{$client->id}})" ><i class="icofont-heart"></i></a><i
-                                                class="icofont-heart"></i></a></div>
+                                                class="icofont-star"></i>{{ number_format($avarage, 1) }}
+                                            ({{ count($reviewcount) }}+)
+                                        </span></div>
+                                    <div class="favourite-heart text-danger position-absolute"><a
+                                            aria-label="Add to Wishlist" onclick="addWishList({{ $client->id }})"><i
+                                                class="icofont-heart"></i></a><i class="icofont-heart"></i></a></div>
 
                                     @if ($coupons)
                                         <div class="member-plan position-absolute"><span

@@ -99,27 +99,25 @@
                     </ul>
                 </li>
 
-                <li class="mt-2 menu-title" data-key="t-components">Elements</li>
-
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="briefcase"></i>
+                        <i data-feather="grid"></i>
                         <span data-key="t-components">Manage Reports</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('admin.all.reports') }}" data-key="t-alerts">All Reports</a></li>
-                        <li><a href="ui-buttons.html" data-key="t-buttons">Buttons</a></li>
                     </ul>
                 </li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="gift"></i>
-                        <span data-key="t-ui-elements">Extended</span>
+                        <span data-key="t-ui-elements">Manage Review</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="extended-lightbox.html" data-key="t-lightbox">Lightbox</a></li>
-                        <li><a href="extended-rangeslider.html" data-key="t-range-slider">Range Slider</a></li>
+                        <li><a href="{{ route('admin.pending.review') }}" data-key="t-lightbox">Pending Review</a></li>
+                        <li><a href="{{ route('admin.approve.review') }}" data-key="t-range-slider">Approve Review</a>
+                        </li>
                     </ul>
                 </li>
 
