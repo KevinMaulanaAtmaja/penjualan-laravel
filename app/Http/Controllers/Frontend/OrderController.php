@@ -48,7 +48,7 @@ class OrderController extends Controller
             'currency' => 'USD',
             'amount' => $subtotal,
             'total_amount' => $payable,
-            'invoice_no' => 'easyshop' . mt_rand(10000000, 99999999),
+            'invoice_no' => 'restohub' . mt_rand(10000000, 99999999),
             'order_date' => Carbon::now()->format('d F Y'),
             'order_month' => Carbon::now()->format('F'),
             'order_year' => Carbon::now()->format('Y'),
@@ -68,6 +68,86 @@ class OrderController extends Controller
         }
 
         Session::forget(['cart', 'coupon']);
+
+        return redirect()->route('checkout.thanks')->with([
+            'message' => 'Order Placed Successfully',
+            'alert-type' => 'success'
+        ]);
+    }
+
+    public function StripeOrder(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'stripeToken' => 'required',
+        ]);
+
+        $cart = session()->get('cart', []);
+        $totalAmount = 0;
+
+        foreach ($cart as $item) {
+            $totalAmount += $item['price'] * $item['quantity'];
+        }
+
+        if (Session::has('coupon')) {
+            $discount = Session::get('coupon')['discount_amount'];
+            $payableAmount = $totalAmount - $discount;
+        } else {
+            $discount = 0;
+            $payableAmount = $totalAmount;
+        }
+
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+
+        $charge = \Stripe\Charge::create([
+            'amount' => $payableAmount * 100,
+            'currency' => 'usd',
+            'description' => 'RestoHub Delivery',
+            'source' => $request->stripeToken,
+            'metadata' => [
+                'order_id' => uniqid(),
+                'original_amount' => $totalAmount,
+                'discount' => $discount
+            ],
+        ]);
+
+        $order_id = Order::insertGetId([
+            'user_id' => Auth::id(),
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'payment_type' => 'Stripe',
+            'payment_method' => $charge->payment_method,
+            'currency' => $charge->currency,
+            'transaction_id' => $charge->balance_transaction,
+            'amount' => $totalAmount,
+            'total_amount' => $payableAmount,
+            'order_number' => $charge->metadata->order_id,
+            'invoice_no' => 'restohub' . mt_rand(10000000, 99999999),
+            'order_date' => Carbon::now()->format('d F Y'),
+            'order_month' => Carbon::now()->format('F'),
+            'order_year' => Carbon::now()->format('Y'),
+            'status' => 'Paid',
+            'created_at' => Carbon::now(),
+        ]);
+
+        foreach ($cart as $item) {
+            OrderItem::insert([
+                'order_id' => $order_id,
+                'product_id' => $item['id'],
+                'client_id' => $item['client_id'],
+                'qty' => $item['quantity'],
+                'price' => $item['price'],
+                'created_at' => Carbon::now(),
+            ]);
+        }
+
+        Session::forget('cart');
+        Session::forget('coupon');
 
         return redirect()->route('checkout.thanks')->with([
             'message' => 'Order Placed Successfully',
